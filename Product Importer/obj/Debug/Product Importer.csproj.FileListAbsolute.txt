@@ -1,0 +1,13 @@
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\bin\Debug\Product Importer.exe.config
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\bin\Debug\Product Importer.exe
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\bin\Debug\Product Importer.pdb
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csprojResolveAssemblyReference.cache
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product_Importer.Properties.Resources.resources
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csproj.GenerateResource.Cache
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.exe
+c:\users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.pdb
+C:\Users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csproj.ResolveComReference.cache
+C:\Users\qiangli\documents\visual studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product_Importer.Form1.resources
+C:\Users\jli1\Documents\Visual Studio 2013\product importer\Product Importer\obj\Debug\Product Importer.csprojResolveAssemblyReference.cache
+C:\Users\jli1\Documents\Visual Studio 2013\product importer\Product Importer\obj\Debug\Product Importer.exe
+C:\Users\jli1\Documents\Visual Studio 2013\product importer\Product Importer\obj\Debug\Product Importer.pdb
