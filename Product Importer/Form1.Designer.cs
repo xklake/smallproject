@@ -41,6 +41,12 @@
             this.button3 = new System.Windows.Forms.Button();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.button4 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtListURL = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -64,7 +70,7 @@
             this.imgFold.Name = "imgFold";
             this.imgFold.Size = new System.Drawing.Size(394, 20);
             this.imgFold.TabIndex = 1;
-            this.imgFold.Text = "E:\\BaiduYunDownload\\20150521";
+            this.imgFold.Text = "E:\\BaiduYunDownload\\20150528";
             this.imgFold.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imgFold_MouseDown);
             // 
             // label1
@@ -91,7 +97,7 @@
             this.sourceFile.Name = "sourceFile";
             this.sourceFile.Size = new System.Drawing.Size(394, 20);
             this.sourceFile.TabIndex = 3;
-            this.sourceFile.Text = "E:\\jiajiayoupin";
+            this.sourceFile.Text = "E:\\BaiduYunDownload\\Lush 1.xlsx";
             this.sourceFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sourceFile_MouseDown);
             // 
             // button2
@@ -110,7 +116,7 @@
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.Size = new System.Drawing.Size(394, 20);
             this.txtOutput.TabIndex = 6;
-            this.txtOutput.Text = "D:\\output";
+            this.txtOutput.Text = "E:\\BaiduYunDownload\\Lush output";
             // 
             // label3
             // 
@@ -123,7 +129,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(67, 446);
+            this.button3.Location = new System.Drawing.Point(1091, 12);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(224, 38);
             this.button3.TabIndex = 8;
@@ -133,27 +139,90 @@
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(41, 152);
+            this.webBrowser1.Location = new System.Drawing.Point(1294, 3);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(498, 277);
+            this.webBrowser1.Size = new System.Drawing.Size(50, 20);
             this.webBrowser1.TabIndex = 9;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(329, 446);
+            this.button4.Location = new System.Drawing.Point(594, 501);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(224, 38);
             this.button4.TabIndex = 10;
-            this.button4.Text = "网络抓取内容图片";
+            this.button4.Text = "清理图片文件";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(619, 22);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "列表URL";
+            // 
+            // txtListURL
+            // 
+            this.txtListURL.Location = new System.Drawing.Point(680, 19);
+            this.txtListURL.Name = "txtListURL";
+            this.txtListURL.Size = new System.Drawing.Size(394, 20);
+            this.txtListURL.TabIndex = 11;
+            this.txtListURL.Text = "http://lush.tmall.hk/search.htm?spm=a1z10.3-b.w4011-8327940127.120.R6F82g&scene=t" +
+    "aobao_shop&search=y&orderType=&tsearch=y";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(67, 265);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(224, 38);
+            this.button5.TabIndex = 13;
+            this.button5.Text = "加载文件+下载网页";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(1023, 449);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(224, 38);
+            this.button6.TabIndex = 14;
+            this.button6.Text = "下载网络数据";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(362, 265);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(224, 38);
+            this.button7.TabIndex = 15;
+            this.button7.Text = "整理图片链接";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(659, 265);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(224, 38);
+            this.button8.TabIndex = 16;
+            this.button8.Text = "生产最终文件";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 588);
+            this.ClientSize = new System.Drawing.Size(1356, 588);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtListURL);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.button3);
@@ -188,6 +257,12 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtListURL;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
 

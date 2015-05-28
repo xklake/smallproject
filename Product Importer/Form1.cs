@@ -37,6 +37,8 @@ namespace Product_Importer
         string rowdef = ",\"{cat}\",\"{name}\",\"{enname}\",\"{sku}\",\"{stock}\",\"{weight}\",\"{fullprice}\",\"{discountprice}\",\"{brief}\",\"{intro}\",\"{content}\",\"{smallimage}\",\"{largeimage}\",\"{keywords}\",\"{seodesc}\",\"17\",\"{brand}\",\"{madein}\",\"{sendfrom}\",\"{smallimageset}\",\"{largeimageset}\",\"{extendcat}\"";
         string rowtemp = ",\"{cat}\",\"{name}\",\"{enname}\",\"{sku}\",\"{stock}\",\"{weight}\",\"{fullprice}\",\"{discountprice}\",\"{brief}\",\"{intro}\",\"{content}\",\"{smallimage}\",\"{largeimage}\",\"{keywords}\",\"{seodesc}\",\"17\",\"{brand}\",\"{madein}\",\"{sendfrom}\",\"{brand}\",\"{smallimageset}\",\"{largeimageset}\", \"{extendcat}\"";
 
+        string fileext = "gifjpgjpegpng"; 
+
         //string head = "ID,分类,名称,Sku,库存,重量,市场价,商城价,简述,内容,缩略图,图片,关键字,描述,类型,品牌,产地,发货地,缩略图集,图片集"; 
         string head = "ID,分类,名称,英文名称,Sku,库存,重量,市场价,商城价,简述,介绍,内容,缩略图,图片,关键字,描述,类型,品牌,产地,发货地,缩略图集,图片集,扩展分类"; 
 
@@ -70,7 +72,7 @@ namespace Product_Importer
 
             readImgfromDirectory();
 
-            processTaobao();
+            prepareoutput();
 
             writeCSV();
         }
@@ -80,18 +82,43 @@ namespace Product_Importer
             inputRows.Clear();
             skuList.Clear();
             allImages.Clear();
-            outPut.Clear(); 
+            outPut.Clear();
 
 
             readSourceFile();
 
+            ReadDataFromWebsite();
+
             readImgfromDirectory();
 
-            process();
 
-            writeCSV();
 
         }
+
+        private void ReadDataFromWebsite()
+        {
+            foreach(ArrayList row in inputRows)
+            {
+                string sku = (string)row[0];
+                string url = (string)row[14]; 
+
+                //读取网络文件
+
+                string webContent = DownloadWebPage(url); 
+
+                if(webContent == null || webContent.Length == 0)
+                {
+                    Console.WriteLine("下载网页是空的，真扯淡"); 
+                }
+
+                ParseTMALL(webContent, row);
+
+                
+
+            }
+        }
+
+
 
         private void DownloadImage(string url, string location)
         {
@@ -131,8 +158,9 @@ namespace Product_Importer
 
         private string DownloadWebPage(string url)
         {
-            string testurl = "http://detail.tmall.hk/hk/item.htm?spm=a220m.1000858.1000725.1.2wQFHl&id=40957877409&skuId=67793583877&areaId=430100&cat_id=2&rn=1e5c9ffe3e68d072bee93050d477eb37&standard=1&user_id=2113658227&is_b=1";
-            
+            //string testurl = "http://detail.tmall.hk/hk/item.htm?spm=a220m.1000858.1000725.1.2wQFHl&id=40957877409&skuId=67793583877&areaId=430100&cat_id=2&rn=1e5c9ffe3e68d072bee93050d477eb37&standard=1&user_id=2113658227&is_b=1";
+            string testurl = url; 
+
             WebRequest request = null; 
             WebResponse response = null;
             StreamReader reader = null;
@@ -256,7 +284,7 @@ namespace Product_Importer
         }
 
 
-        private void processTaobao()
+        private void prepareoutput()
         {
             allImages.Sort();
 
@@ -502,12 +530,12 @@ namespace Product_Importer
 
         private void readImgfromDirectory()
         {
-            if(imgFold.Text.Length ==0)
+            if (txtOutput.Text.Length == 0)
             {
                 return; 
             }
 
-            ProcessDirectory(imgFold.Text);  
+            ProcessDirectory(txtOutput.Text);  
         }
 
 
@@ -644,7 +672,7 @@ namespace Product_Importer
             {
                 //use rules for tmall
 
-                ParseTMALL(content); 
+                //ParseTMALL(content, ""); 
 
             }
             else if(content.IndexOf(".taobao.") != -1)
@@ -658,15 +686,38 @@ namespace Product_Importer
 
         }
 
-        private void ParseTMALL(string content)
-        {
 
+        private string CleanString( string input)
+        {
+            input = input.Replace("\t", "");
+
+            input = input.Replace("\r\n", "");
+
+            return input.Trim(); 
+        }
+
+
+        private void ParseTMALL(string content, ArrayList row)
+        {
             WriteStartMark();
             Console.WriteLine("Begin to parse the data");
 
-            ProductDetails product = new ProductDetails();
+            string sku = row[0].ToString(); 
 
-//            content = content.Replace("\"", "#"); 
+            //解析title
+            int loc30 = content.IndexOf("<title>");
+
+
+            int loc31 = -1;
+
+            if (loc30 != -1)
+            {
+                loc31 = content.IndexOf("</title>", loc30);
+            }
+
+            string title = content.Substring(loc30 + 7, loc31 - loc30 - 7); 
+
+
 
             //解析名称
             int loc1 = content.IndexOf("tb-detail-hd");
@@ -680,31 +731,20 @@ namespace Product_Importer
 
             Console.WriteLine("产品名称是:  " + name);
 
-            product.name = name; 
+            //product.name = name;
+            row[2] = name; 
 
 
-            //parse price
-            /*int loc5 = content.IndexOf("<span class=#tm-price#>", loc4);
-            int loc6 = content.IndexOf(">", loc5);
-            int loc7 = content.IndexOf("<", loc6);
+            //解析简介 
+            int loc10 = content.IndexOf("<p>", loc4);
+            int loc11 = content.IndexOf("</p>", loc10);
 
-            string sfullprice = content.Substring(loc6 + 1, loc7 - loc6);
+            string brief = content.Substring(loc10 + 3, loc11 - loc10 - 4);
 
-            decimal fullprice = 0; 
+            brief = CleanString(brief); 
 
-            try 
-            {
-                fullprice = Decimal.Parse(sfullprice); 
-            }
-            catch(Exception x)
-            {
-                Console.WriteLine("原价解析错误" + x.Message); 
-            }
-
-            Console.WriteLine("产品原价是:  " + sfullprice);
-
-            product.fullprice = fullprice; 
-             */
+            row[6] = brief.Trim(); 
+            
 
             //parse smallimage set
             int loc5 = content.IndexOf("J_UlThumb", loc4);
@@ -732,8 +772,8 @@ namespace Product_Importer
                 Directory.CreateDirectory(txtOutput.Text); 
             }
 
-           
-            string parentPath = txtOutput.Text + "\\" + product.name; 
+
+            string parentPath = txtOutput.Text + "\\" + sku + "---" + name; 
 
 
             if(!Directory.Exists(parentPath))
@@ -756,6 +796,10 @@ namespace Product_Importer
                 Directory.CreateDirectory(parentPath + "\\large");
             }
 
+            if (!Directory.Exists(parentPath + "\\details"))
+            {
+                Directory.CreateDirectory(parentPath + "\\details");
+            }
 
             foreach(string url in imgs)
             {
@@ -766,18 +810,109 @@ namespace Product_Importer
                 string filename = sq.ToString() + ext;
 
 
-                DownloadImage(small, parentPath + "\\small\\" + filename);
+                DownloadImage(small, parentPath + "\\small\\" + sku + "-S-" + filename);
 
-                string mobile = url.Replace("60x60", "720x720");
-                DownloadImage(mobile, parentPath + "\\mobile\\" + filename);
+                string mobile = url.Replace("60x60", "600x600");
+                DownloadImage(mobile, parentPath + "\\mobile\\" + sku + "-M-" + filename);
 
                 string large = url.Replace("60x60", "760x760");
-                DownloadImage(large, parentPath + "\\large\\" + filename); 
+                DownloadImage(large, parentPath + "\\large\\" + sku + "-L-" + filename); 
             }
 
-            //parse largeimage set
-             
+            // copy and save details files
+            string imgfold = imgFold.Text; 
+            
+            if(Directory.Exists(imgFold.Text) == true)
+            {
 
+                foreach(string dir in Directory.GetDirectories(imgFold.Text))
+                {
+                    //找到图片所在的文件夹
+                    if (dir.IndexOf(title) != -1)
+                    {
+                        int filenumber = 0; 
+
+                        foreach (string file in Directory.GetFiles(dir))
+                        {
+                            filenumber++;
+
+                            string ext = file.Substring(file.Length - 4, 4);
+                            string filename = filenumber.ToString() + ext;
+
+                            File.Copy(file, parentPath + "\\details\\" + sku + "-" + filename); 
+
+                        }
+                    }
+                }
+            }
+            
+
+
+            
+            //抓取功效 
+            int loc20 = content.IndexOf("<ul id=\"J_AttrUL\">", loc11); 
+            int loc21 = 0;
+            string intro = ""; 
+
+            if(loc20 != -1)
+            {
+                loc21 = content.IndexOf("</ul>", loc20); 
+
+                intro = content.Substring(loc20 + 18, loc21 - loc20 - 18); 
+            }
+
+            intro = CleanString(intro); 
+
+            row[3] = intro;
+
+
+            //Regex regImg = new Regex(@"<img\b[^<>]*?\bsrc[\s\t\r\n]*=[\s\t\r\n]*[""']?[\s\t\r\n]*(?<imgUrl>[^\s\t\r\n""'<>]*)[^<>]*?/?[\s\t\r\n]*>", RegexOptions.IgnoreCase);
+
+            /*regImg = new Regex(@"<li \S*><Val></li>", RegexOptions.IgnoreCase);
+
+
+            matches = regImg.Matches(intro);
+
+            ArrayList par = new ArrayList();
+
+            foreach (Match mt in matches)
+            {
+                par.Add("http://" + mt.Groups["Val"].Value.Substring(2));
+
+                Console.WriteLine(mt.Groups["Val"].Value.Substring(2));
+            }*/
+
+            string tmp = intro;
+            string result = "<ul>"; 
+
+            int mov = -1;
+
+            tmp = CleanString(tmp); 
+
+            while(tmp.IndexOf("<li") != -1)
+            {
+                mov = tmp.IndexOf("<li");
+
+                int a = tmp.IndexOf(">", mov); 
+
+                int b = tmp.IndexOf("</li>", a); 
+                
+                if(a != -1 && b != -1)
+                {
+                    result += "<li>" + CleanString(tmp.Substring(a + 1, b - a - 1)) + "</li> ";
+
+                    tmp = tmp.Substring(b + 5); 
+                }
+
+            }
+
+            result += "</ul>";
+
+            row[9] = result; 
+
+
+
+            
 
 
             WriteCloseMark(); 
@@ -807,18 +942,103 @@ namespace Product_Importer
 
         private void button4_Click(object sender, EventArgs e)
         {
-            HtmlElement el = webBrowser1.Document.GetElementById("mainwrap"); 
-            if(el != null)
+            //if (txtListURL.Text.Trim().Length == 0)
+            //    return;
+
+            //string content = DownloadWebPage(txtListURL.Text); 
+
+
+            if (imgFold.Text.Trim().Length == 0)
+                return;
+
+
+            if (Directory.Exists(imgFold.Text.Trim()) == false)
+                return;
+
+            CheckFold(imgFold.Text.Trim()); 
+
+        }
+
+        private void CheckFold( string dir)
+        {
+            foreach(string subdir in Directory.GetDirectories(dir))
             {
-                int i = 0; 
+                CheckFold(subdir); 
             }
 
-            webBrowser1.ShowSaveAsDialog();
 
-//            System.IO.StreamReader getReader = new System.IO.StreamReader(webBrowser1.DocumentStream, System.Text.Encoding.GetEncoding("gb2312"));
+            foreach (string filename in Directory.GetFiles(dir))
+            {
+                string ext = filename.Substring(filename.Length - 3);
 
-//            string gethtml = getReader.ReadToEnd();
+                //过滤掉费图片文件
+                if (fileext.IndexOf(ext) == -1)
+                {
+                    try
+                    {
+                        File.Delete(@filename);
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.Message);
+                    }
 
+                    continue; 
+                }
+
+
+                //过滤掉太小的文件
+                FileStream fs = new FileStream(filename, FileMode.Open);
+                Bitmap pic = new Bitmap(fs);
+                bool delete = false;
+
+
+
+                if (pic.Size.Width < 450 || pic.Size.Height < 150 || pic.Size.Width > 800 ||(pic.Size.Width == 790 && pic.Size.Height == 326)
+                  )
+                {
+                    delete = true;
+                }
+
+                fs.Close(); 
+
+                if (delete)
+                {
+                    try
+                    {
+                        File.Delete(filename);
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.Message);
+                    }
+                }
+            }
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            inputRows.Clear();
+            skuList.Clear();
+            allImages.Clear();
+            outPut.Clear();
+            readSourceFile();
+            ReadDataFromWebsite(); 
+
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            readImgfromDirectory();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            prepareoutput();
+            process();
+            writeCSV();
         }
 
     }
@@ -868,7 +1088,9 @@ namespace Product_Importer
 
         public string largetimageset;
 
-        public string extendcategories; 
+        public string extendcategories;
+
+        public string url; 
 
     }
 }
