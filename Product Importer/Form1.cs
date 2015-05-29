@@ -25,6 +25,8 @@ namespace Product_Importer
 
         ArrayList allImages = new ArrayList();
 
+        ArrayList smallImages = new ArrayList(); 
+
         ArrayList outPut = new ArrayList();
 
         string url = "http://7xiosd.com1.z0.glb.clouddn.com/";
@@ -62,19 +64,43 @@ namespace Product_Importer
         {
             //Application.Exit();
 
-            inputRows.Clear();
-            skuList.Clear();
-            allImages.Clear();
-            outPut.Clear();
+            //inputRows.Clear();
+            //skuList.Clear();
+            //allImages.Clear();
+            //outPut.Clear();
 
 
-            readSourceFile();
+            //readSourceFile();
 
-            readImgfromDirectory();
+            //readImgfromDirectory();
 
-            prepareoutput();
+            //writeCSV();
 
-            writeCSV();
+
+            FileInfo fi = new FileInfo(txtOutput.Text.Trim());
+
+
+            if (!fi.Exists)
+            {
+                fi.Directory.Create();
+            }
+
+            string fileName = txtOutput.Text.Trim() + "\\" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx"; 
+            InsertPicToExcel ipt = new InsertPicToExcel();
+
+            ipt.Open(fileName);
+
+
+            //begin to write into excel file
+            foreach(ArrayList arr in inputRows)
+            {
+
+            }
+            ipt.InsertPicture("B2", @"D:\BaiduYunDownload\Lush output\LUSH-MASKMAGNAMINTY-315-S-3.jpg",  100,  100);
+            ipt.InsertPicture("B18", @"D:\BaiduYunDownload\Lush output\LUSH-MASKMAGNAMINTY-315-S-3.jpg", 200, 200);
+            ipt.SaveFile(@"D:\BaiduYunDownload\Lush output\ExcelTest.xls");
+
+            ipt.Dispose(); 
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -83,16 +109,13 @@ namespace Product_Importer
             skuList.Clear();
             allImages.Clear();
             outPut.Clear();
-
+            smallImages.Clear(); 
 
             readSourceFile();
 
             ReadDataFromWebsite();
 
             readImgfromDirectory();
-
-
-
         }
 
         private void ReadDataFromWebsite()
@@ -284,112 +307,6 @@ namespace Product_Importer
         }
 
 
-        private void prepareoutput()
-        {
-            allImages.Sort();
-
-            foreach (Object row in inputRows)
-            {
-                rowtemp = ",\"{cat}\",\"{name}\",\"{enname}\",\"{sku}\",{content}";
-
-                ArrayList a = (ArrayList)row;
-
-                string sku = a[0].ToString();
-
-                string cat = a[a.Count - 1].ToString();
-
-                string[] categories = cat.Split('|');
-
-
-                {
-                    rowtemp = rowtemp.Replace("{sku}", a[0].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{enname}", a[1].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{name}", a[2].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{weight}", a[4].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{stock}", a[5].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{brief}", a[9].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{brand}", a[8].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{intro}", a[3].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{madein}", a[10].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{sendfrom}", a[11].ToString().Trim());
-
-
-                    rowtemp = rowtemp.Replace("{fullprice}", a[6].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{extendcat}", a[12].ToString().Trim());
-
-                    rowtemp = rowtemp.Replace("{discountprice}", a[7].ToString().Trim());
-
-
-                    //ok, let's find out all the images 
-                    string detailimage = "";
-                    string smallimage = "";
-                    string largeimage = "";
-                    string smallimageset = "";
-                    string largeimageset = "";
-
-
-                    foreach (string img in allImages)
-                    {
-                        //large images
-                        if (img.ToUpper().IndexOf(sku.ToUpper() + "-L-") != -1)
-                        {
-                            largeimageset += url + img + "|";
-
-                            if (largeimage.Length == 0)
-                            {
-                                largeimage = url + img;
-                            }
-                        }
-
-                        else if (img.ToUpper().IndexOf(sku + "-S-") != -1)
-                        {
-                            smallimageset += url + img + "|";
-
-                            if (smallimage.Length == 0)
-                            {
-                                smallimage = url + img;
-                            }
-                        }
-                        else if (img.ToUpper().IndexOf(sku + "-P-") != -1)
-                        {
-                            continue;
-                        }
-                        else if (img.ToUpper().IndexOf(sku) != -1)
-                        {
-                            detailimage += "<img src=\"" + url + img + "\"></img>";
-                        }
-                    }
-
-
-                    rowtemp = rowtemp.Replace("{smallimage}", smallimage);
-                    rowtemp = rowtemp.Replace("{largeimage}", largeimage);
-                    rowtemp = rowtemp.Replace("{smallimageset}", smallimageset);
-                    rowtemp = rowtemp.Replace("{largeimageset}", largeimageset);
-                    rowtemp = rowtemp.Replace("{content}", detailimage);
-                }
-
-
-                foreach (string str in categories)
-                {
-                    outPut.Add(rowtemp.Replace("{cat}", str));
-                }
-            }
-
-        }
-
-
-
-
         private void process()
         {
             allImages.Sort(); 
@@ -402,9 +319,9 @@ namespace Product_Importer
 
                 string sku = a[0].ToString();
 
-                string cat = a[a.Count - 1].ToString();
+                string cat = a[a.Count - 2].ToString();
 
-                string [] categories = cat.Split('|');
+                //string [] categories = cat.Split('|');
 
 
                 {
@@ -433,6 +350,7 @@ namespace Product_Importer
 
                     rowtemp = rowtemp.Replace("{extendcat}", a[12].ToString().Trim());
 
+                    rowtemp = rowtemp.Replace("{cat}", cat.Trim());
 
                     rowtemp = rowtemp.Replace("{discountprice}", a[7].ToString().Trim());
 
@@ -485,11 +403,7 @@ namespace Product_Importer
                     rowtemp = rowtemp.Replace("{content}", detailimage);
                 }
 
-
-                foreach(string str in categories)
-                {
-                    outPut.Add(rowtemp.Replace("{cat}", str));
-                }
+                    outPut.Add(rowtemp);
             }
 
         }
@@ -743,7 +657,7 @@ namespace Product_Importer
 
             brief = CleanString(brief); 
 
-            row[6] = brief.Trim(); 
+            row[9] = brief.Trim(); 
             
 
             //parse smallimage set
@@ -812,6 +726,8 @@ namespace Product_Importer
 
                 DownloadImage(small, parentPath + "\\small\\" + sku + "-S-" + filename);
 
+                smallImages.Add(parentPath + "\\small\\" + sku + "-S-" + filename); 
+
                 string mobile = url.Replace("60x60", "600x600");
                 DownloadImage(mobile, parentPath + "\\mobile\\" + sku + "-M-" + filename);
 
@@ -839,7 +755,7 @@ namespace Product_Importer
                             string ext = file.Substring(file.Length - 4, 4);
                             string filename = filenumber.ToString() + ext;
 
-                            File.Copy(file, parentPath + "\\details\\" + sku + "-" + filename); 
+                            File.Copy(file, parentPath + "\\details\\" + sku + "-" + filename, true); 
 
                         }
                     }
@@ -860,11 +776,12 @@ namespace Product_Importer
 
                 intro = content.Substring(loc20 + 18, loc21 - loc20 - 18); 
             }
+    
+            int loc40  =  intro.LastIndexOf("</li>");
+
+            intro = intro.Substring(0, loc40 + 5); 
 
             intro = CleanString(intro); 
-
-            row[3] = intro;
-
 
             //Regex regImg = new Regex(@"<img\b[^<>]*?\bsrc[\s\t\r\n]*=[\s\t\r\n]*[""']?[\s\t\r\n]*(?<imgUrl>[^\s\t\r\n""'<>]*)[^<>]*?/?[\s\t\r\n]*>", RegexOptions.IgnoreCase);
 
@@ -889,9 +806,9 @@ namespace Product_Importer
 
             tmp = CleanString(tmp); 
 
-            while(tmp.IndexOf("<li") != -1)
+            while(tmp.IndexOf("<li ") != -1)
             {
-                mov = tmp.IndexOf("<li");
+                mov = tmp.IndexOf("<li ");
 
                 int a = tmp.IndexOf(">", mov); 
 
@@ -908,7 +825,7 @@ namespace Product_Importer
 
             result += "</ul>";
 
-            row[9] = result; 
+            row[3] = result; 
 
 
 
@@ -1036,61 +953,18 @@ namespace Product_Importer
 
         private void button8_Click(object sender, EventArgs e)
         {
-            prepareoutput();
+            //prepareoutput();
             process();
             writeCSV();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
 
 
-    class ProductDetails
-    {
-        public string SUK;
 
-        public string URL;
-
-        public string category;
-
-        public string name;
-
-        public int stock;
-
-        public int weight;
-
-        public decimal fullprice;
-
-        public decimal discountprice;
-
-        public string brief;
-
-        public string intro;
-
-        public string content;
-
-        public string smallimage;
-
-        public string largeimage;
-
-        public string keyword;
-
-        public string seodesc;
-
-        public int producttype; 
-
-        public string brand; 
-
-        public string madein; 
-
-        public string sendfrom;
-
-        public string smallimageset;
-
-        public string largetimageset;
-
-        public string extendcategories;
-
-        public string url; 
-
-    }
 }
