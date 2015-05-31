@@ -99,7 +99,7 @@
             this.sourceFile.Name = "sourceFile";
             this.sourceFile.Size = new System.Drawing.Size(394, 20);
             this.sourceFile.TabIndex = 3;
-            this.sourceFile.Text = "D:\\BaiduYunDownload\\Lush 1.xlsx";
+            this.sourceFile.Text = "E:\\jiajiayoupin\\导出产品测试.csv";
             this.sourceFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sourceFile_MouseDown);
             // 
             // button2
@@ -187,11 +187,11 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(1023, 449);
+            this.button6.Location = new System.Drawing.Point(850, 510);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(224, 38);
             this.button6.TabIndex = 14;
-            this.button6.Text = "下载网络数据";
+            this.button6.Text = "解析淘宝导出文件";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 

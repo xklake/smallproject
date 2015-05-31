@@ -60,31 +60,9 @@ namespace Product_Importer
             }
         }
 
+
         private void button2_Click(object sender, EventArgs e)
         {
-            //Application.Exit();
-
-            //inputRows.Clear();
-            //skuList.Clear();
-            //allImages.Clear();
-            //outPut.Clear();
-
-
-            //readSourceFile();
-
-            //readImgfromDirectory();
-
-            //writeCSV();
-
-
-            FileInfo fi = new FileInfo(txtOutput.Text.Trim());
-
-
-            if (!fi.Exists)
-            {
-                fi.Directory.Create();
-            }
-
             string fileName = txtOutput.Text.Trim() + "\\" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx"; 
             InsertPicToExcel ipt = new InsertPicToExcel();
 
@@ -92,14 +70,63 @@ namespace Product_Importer
 
 
             //begin to write into excel file
-            foreach(ArrayList arr in inputRows)
+            ArrayList head = new ArrayList();
+            head.Add("SKU");
+            head.Add("图片");
+            head.Add("中文名称");
+            head.Add("英文名称");
+            head.Add("介绍");
+            head.Add("分类");
+            head.Add("品牌");
+            head.Add("促销价");
+            head.Add("原价");
+            head.Add("英国原价");
+            head.Add("成本价");
+            head.Add("重量");
+
+            head.Add("库存");
+            head.Add("参考链接"); 
+
+            ipt.writeHeadLine(head);
+
+            ipt.adjustSize(head, 102, 20); 
+
+
+            int i= 0; 
+            foreach (ArrayList arr in inputRows)
             {
+                ArrayList newArr = new ArrayList();
+                newArr.Add(arr[0]);
+                newArr.Add(arr[0] + ".gif");
+                newArr.Add(arr[2]);
+                newArr.Add(arr[1]);
+                newArr.Add(arr[3]); 
+
+                if(arr[12].ToString() != arr[13].ToString())
+                {
+                    newArr.Add(arr[12] + "|" + arr[13]); 
+                }
+                else
+                {
+                    newArr.Add(arr[12]); 
+                }
+
+                newArr.Add(arr[8]);
+                newArr.Add(arr[7]);
+                newArr.Add(arr[6]); 
+                newArr.Add("N/A"); 
+                newArr.Add("N/A"); 
+                newArr.Add(arr[4]);
+                newArr.Add(arr[5]);
+                newArr.Add(arr[14]); 
+
+                ipt.writeOneProduct(newArr, smallImages); 
+
+                i++; 
 
             }
-            ipt.InsertPicture("B2", @"D:\BaiduYunDownload\Lush output\LUSH-MASKMAGNAMINTY-315-S-3.jpg",  100,  100);
-            ipt.InsertPicture("B18", @"D:\BaiduYunDownload\Lush output\LUSH-MASKMAGNAMINTY-315-S-3.jpg", 200, 200);
-            ipt.SaveFile(@"D:\BaiduYunDownload\Lush output\ExcelTest.xls");
 
+            ipt.SaveFile(fileName); 
             ipt.Dispose(); 
         }
 
@@ -243,9 +270,7 @@ namespace Product_Importer
             if (web.DocumentText != null && gethtml.IndexOf("描述加载中") == -1)
             {
                 int i = 0; 
-
             }
-
         }
 
 
@@ -960,7 +985,83 @@ namespace Product_Importer
 
         private void button6_Click(object sender, EventArgs e)
         {
+            if(sourceFile.Text.Length > 0)
+            {
+                StreamReader rd = new StreamReader(sourceFile.Text);
 
+                StreamWriter wr = new StreamWriter(txtOutput.Text.ToString() + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".csv");
+
+                string firstline = rd.ReadLine();
+                wr.WriteLine(firstline);
+
+                string secondline = rd.ReadLine();
+                wr.WriteLine(secondline);
+
+                string thirdline = rd.ReadLine();
+                wr.WriteLine(thirdline);
+
+                string[] header = thirdline.Split('\t');
+
+                ArrayList[] reorder = new ArrayList[header.Length];
+
+                for (int k = 0; k < reorder.Length; k++)
+                {
+                    reorder[k] = new ArrayList();
+                }
+
+                for (int i = 0; i < header.Length; i++)
+                {
+                    reorder[i].Add(header[i]);
+                }
+
+
+                while(rd.Peek() >=0 )
+                {
+                    string line = rd.ReadLine();
+                    string[] columns = line.Split('\t');
+
+                    columns[0] = columns[0] + "测试"; 
+                    columns[1] = "";
+
+                    string newline = "";
+
+                    for (int i = 0; i < columns.Length; i++)
+                    {
+                        reorder[i].Add(columns[i]);
+                    }
+
+
+                    wr.WriteLine(newline); 
+
+                    Console.WriteLine("column count is " + columns.Length.ToString()); 
+                }
+
+                StreamWriter txt = new StreamWriter(txtOutput.Text.ToString() + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt"); 
+
+                for(int z =0; z < reorder.Length; z ++)
+                {
+                    string oneline = "line " + (z + 1).ToString(); 
+
+                    foreach(string str in reorder[z])
+                    {
+                        oneline += "|||" + str;
+                    }
+
+                    txt.WriteLine(oneline); 
+                }
+
+                txt.Close(); 
+                
+                //foreach (ArrayList list in reorder)
+                //{
+                //    Console.WriteLine()
+                //}
+
+                rd.Close();
+                wr.Close();
+
+                    
+            }
         }
 
     }

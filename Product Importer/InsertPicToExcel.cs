@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections; 
+using System.Collections;
+using System.IO; 
 
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -12,8 +13,8 @@ namespace Product_Importer
 {
     class InsertPicToExcel
     {
-        int locX = 0;
-        int locY = 0; 
+        int locX = 1;
+        int locY = 1; 
 
 
          public void Open()
@@ -46,8 +47,21 @@ namespace Product_Importer
              }
              else
              {
-                 m_objBook = m_objBooks.Open(TemplateFilePath, m_objOpt, m_objOpt, m_objOpt, m_objOpt,
-                   m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt);
+                 FileInfo fi = new FileInfo(TemplateFilePath);
+
+
+                 if (fi.Exists)
+                 {
+                     m_objBook = m_objBooks.Open(TemplateFilePath, m_objOpt, m_objOpt, m_objOpt, m_objOpt,
+                       m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt, m_objOpt);
+
+                 }
+                 else
+                 {
+                     m_objBook = (Excel._Workbook)(m_objBooks.Add(m_objOpt));
+                 }
+
+
              }
              m_objSheets = (Excel.Sheets)m_objBook.Worksheets;
              m_objSheet = (Excel._Worksheet)(m_objSheets.get_Item(1));
@@ -58,8 +72,8 @@ namespace Product_Importer
 
         private void init()
          {
-             locX = 0;
-             locY = 0;
+             locX = 1;
+             locY = 1;
          }
 
          private void m_objExcel_WorkbookBeforeClose(Excel.Workbook m_objBooks, ref bool _Cancel)
@@ -67,6 +81,23 @@ namespace Product_Importer
              //MessageBox.Show("保存完毕！");
             
          }
+
+
+         public void adjustSize(ArrayList rowcount, int height, int width)
+         {
+             //adjust row hight
+             for (int i = 0; i < rowcount.Count; i++)
+             {
+                 Excel.Range r = m_objSheet.Rows[i + 2];
+                 r.RowHeight = height;
+             }
+
+
+             //adjust width
+             Excel.Range col = m_objSheet.Columns[2];
+             col.ColumnWidth = width; 
+         }
+
 
          /**//// <summary>
          /// 将图片插入到指定的单元格位置。
@@ -108,37 +139,71 @@ namespace Product_Importer
                Microsoft.Office.Core.MsoTriState.msoTrue, PicLeft, PicTop, PictuteWidth, PictureHeight);
          }
 
+         public void InsertPicture(int locx,int locy, string PicturePath, float PictuteWidth, float PictureHeight)
+         {
+             m_objRange = m_objSheet.Cells[locx, locy];
+             m_objRange.Select();
+             float PicLeft, PicTop;
+             PicLeft = Convert.ToSingle(m_objRange.Left);
+             PicTop = Convert.ToSingle(m_objRange.Top);
+             //参数含义：
+             //图片路径
+             //是否链接到文件
+             //图片插入时是否随文档一起保存
+             //图片在文档中的坐标位置（单位：points）
+             //图片显示的宽度和高度（单位：points）
+             //参数详细信息参见：http://msdn2.microsoft.com/zh-cn/library/aa221765(office.11).aspx
+             m_objSheet.Shapes.AddPicture(PicturePath, Microsoft.Office.Core.MsoTriState.msoFalse,
+               Microsoft.Office.Core.MsoTriState.msoTrue, PicLeft, PicTop, PictuteWidth, PictureHeight);
+         }
+
          public void writeHeadLine(ArrayList arr)
          {
             for(int i = 0; i <arr.Count; i ++ )
-            { 
-                Excel.Range cell = m_objSheet.get_Range(m_objSheet.Cells[locX, locY + i], m_objSheet.Cells[locX, locY+ i]);
+            {
+                try
+                {
+                    Excel.Range cell = m_objSheet.Cells[locX, locY + i];  
 
-                cell.Value = arr[i]; 
+                    cell.Value = arr[i];
+                }
+                catch(Exception x)
+                {
+                    Console.WriteLine("查找单元格错误： " + x.Message.ToString());
+                    continue; 
+                }
             }
 
             locX++;
-            locY = 0; 
+            locY = 1; 
          }
 
 
          public void writeOneProduct(ArrayList arr, ArrayList smallimage)
          {
+             locY = 1; 
+
              for (int i = 0; i < arr.Count; i++)
              {
-                 Excel.Range cell = m_objSheet.get_Range(m_objSheet.Cells[locX, locY + i], m_objSheet.Cells[locX, locY + i]);
+                 Excel.Range cell = m_objSheet.Cells[locX, locY];
 
                  string val = arr[i].ToString().Trim();
-                 string sku = arr[0]; 
+                 string sku = arr[0].ToString(); 
 
                  if(val.Length > 0)
                  {
-                     string ext = val.Substring(val.Length - 4);
+
+                     string ext = "";
+
+                     if (val.Length > 10)
+                     {
+                         ext = val.Substring(val.Length - 3);
+                     }
 
                      string img = "gifjpgjpegpng";
 
                      //not an image
-                     if (img.IndexOf(ext) == -1)
+                     if (ext.Length == 0 || img.IndexOf(ext) == -1)
                      {
                          cell.Value = arr[i];
                      }
@@ -150,7 +215,9 @@ namespace Product_Importer
 
                              if (str.IndexOf(sku) != -1)
                              {
-                                 InsertPicToExcel(); 
+                                 InsertPicture(locX, locY, str, 100, 100);
+                                 break;
+                                 //InsertPicToExcel(); 
                              }
                          }
                      }
@@ -159,12 +226,12 @@ namespace Product_Importer
                  }
                  else
                  {
-                     continue;
-                     locY++; 
-
+                     locY++;
                  }
-
              }
+
+
+             locX++; 
          }
 
 
