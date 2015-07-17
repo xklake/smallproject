@@ -63,7 +63,7 @@ namespace Product_Importer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string fileName = txtOutput.Text.Trim() + "\\" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx"; 
+            string fileName = txtOutput.Text.Trim() + "\\Price_" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx"; 
             InsertPicToExcel ipt = new InsertPicToExcel();
 
             ipt.Open(fileName);
@@ -446,7 +446,7 @@ namespace Product_Importer
           }
 
           try {
-                  FileStream  fs = new FileStream(txtOutput.Text.Trim() + "\\" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".csv", System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                  FileStream  fs = new FileStream(txtOutput.Text.Trim() + "\\import_" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".csv", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                   StreamWriter sw = new StreamWriter(fs, Encoding.Default);
 
                     sw.WriteLine(head);
@@ -1062,6 +1062,11 @@ namespace Product_Importer
 
                     
             }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

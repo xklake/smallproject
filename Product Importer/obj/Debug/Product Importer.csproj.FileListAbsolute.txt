@@ -17,4 +17,3 @@ C:\Users\jli1\Documents\Visual Studio 2013\Projects\Product Importer\Product Imp
 C:\Users\jli1\Documents\Visual Studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product_Importer.Properties.Resources.resources
 C:\Users\jli1\Documents\Visual Studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csproj.GenerateResource.Cache
 C:\Users\jli1\Documents\Visual Studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csprojResolveAssemblyReference.cache
-C:\Users\qiangli\Documents\Visual Studio 2013\Projects\Product Importer\Product Importer\obj\Debug\Product Importer.csprojResolveAssemblyReference.cache

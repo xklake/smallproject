@@ -49,6 +49,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button9 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -141,7 +142,7 @@
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(1294, 3);
+            this.webBrowser1.Location = new System.Drawing.Point(1304, -1);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(50, 20);
@@ -177,7 +178,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(67, 265);
+            this.button5.Location = new System.Drawing.Point(67, 257);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(224, 38);
             this.button5.TabIndex = 13;
@@ -232,11 +233,22 @@
             this.textBox1.TabIndex = 17;
             this.textBox1.Text = "D:\\BaiduYunDownload\\Lush output";
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(67, 197);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(224, 38);
+            this.button9.TabIndex = 19;
+            this.button9.Text = "一定要记得用FireFox下载文件";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1356, 588);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button8);
@@ -287,6 +299,7 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button9;
     }
 }
 
