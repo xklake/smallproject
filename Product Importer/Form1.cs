@@ -414,6 +414,10 @@ namespace Product_Importer
                         {
                             continue;
                         }
+                        else if (img.ToUpper().IndexOf(sku.ToUpper() + "-M-") != -1)
+                        {
+                            continue;
+                        }
                         else if (img.ToUpper().IndexOf(sku.ToUpper()) != -1)
                         {
                             detailimage += "<img src=\"\"" + url + img + "\"\"></img>"; 
@@ -660,7 +664,15 @@ namespace Product_Importer
 
             //解析名称
             int loc1 = content.IndexOf("tb-detail-hd");
-            int loc2 = content.IndexOf("h1", loc1);
+            int loc2 = content.IndexOf("<a", loc1);
+
+            int lockk = content.IndexOf("tm-fcs-panel", loc1); 
+
+            if(loc2 > lockk)
+            {
+                loc2 = content.IndexOf("<h", loc1);
+            }
+
             int loc3 = content.IndexOf(">", loc2);
 
             int loc4 = content.IndexOf("<", loc3);

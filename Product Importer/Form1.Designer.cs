@@ -73,7 +73,7 @@
             this.imgFold.Name = "imgFold";
             this.imgFold.Size = new System.Drawing.Size(394, 20);
             this.imgFold.TabIndex = 1;
-            this.imgFold.Text = "D:\\BaiduYunDownload\\20150528";
+            this.imgFold.Text = "D:\\BaiduYunDownload\\NYR";
             this.imgFold.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imgFold_MouseDown);
             // 
             // label1
@@ -100,7 +100,7 @@
             this.sourceFile.Name = "sourceFile";
             this.sourceFile.Size = new System.Drawing.Size(394, 20);
             this.sourceFile.TabIndex = 3;
-            this.sourceFile.Text = "E:\\jiajiayoupin\\导出产品测试.csv";
+            this.sourceFile.Text = "D:\\BaiduYunDownload\\NYR.xlsx";
             this.sourceFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.sourceFile_MouseDown);
             // 
             // button2
@@ -119,7 +119,7 @@
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.Size = new System.Drawing.Size(394, 20);
             this.txtOutput.TabIndex = 6;
-            this.txtOutput.Text = "D:\\BaiduYunDownload\\Lush output";
+            this.txtOutput.Text = "D:\\BaiduYunDownload\\NYRIMPORT";
             // 
             // label3
             // 
@@ -231,7 +231,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(394, 20);
             this.textBox1.TabIndex = 17;
-            this.textBox1.Text = "D:\\BaiduYunDownload\\Lush output";
+            this.textBox1.Text = "D:\\BaiduYunDownload\\NYRIMPORT";
             // 
             // button9
             // 
