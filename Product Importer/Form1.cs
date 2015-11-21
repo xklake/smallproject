@@ -332,7 +332,7 @@ namespace Product_Importer
         }
 
 
-        private void process()
+        private void process()                                                      
         {
             allImages.Sort(); 
 
@@ -777,10 +777,12 @@ namespace Product_Importer
             
             if(Directory.Exists(imgFold.Text) == true)
             {
+                title = title.Replace('/', '_'); 
 
                 foreach(string dir in Directory.GetDirectories(imgFold.Text))
                 {
                     //找到图片所在的文件夹
+
                     if (dir.IndexOf(title) != -1)
                     {
                         int filenumber = 0; 
